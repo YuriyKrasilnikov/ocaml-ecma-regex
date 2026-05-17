@@ -1,0 +1,8 @@
+(install
+ (section doc)
+ (files
+  DEVIATION_REGISTER.md
+  NORMATIVE_HIERARCHY.md
+  NORMATIVE_TEST_MATRIX.md
+  SPEC_CONFORMANCE.md
+  TEST_EVIDENCE_AUDIT.md))

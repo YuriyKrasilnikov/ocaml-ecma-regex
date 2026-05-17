@@ -1,0 +1,63 @@
+(tests
+ (names
+  test_api
+  test_raw_utf16_escape_matrix
+  test_raw_utf16_negative_position_matrix
+  test_raw_utf16_result_slicing_matrix
+  test_raw_utf16_coverage_matrix
+  test_raw_utf16_generated_cases
+  test_test262_core_corpus
+  test_ecma262_compile_parser_selection
+  test_ecma262_compile_parser_exact_plan
+  test_ecma262_compile_parser_candidate_map
+  test_ecma262_literal_lexer_exact_plan
+  test_ecma262_match_engine_exact_plan
+  test_ecma262_match_engine_atoms_exact_plan
+  test_ecma262_match_engine_unicode_sets_string_exact_plan
+  test_ecma262_match_engine_unicode_sets_escape_string_exact_plan
+  test_ecma262_match_engine_backreference_exact_plan
+  test_ecma262_match_engine_backreference_matcher_exact_plan
+  test_ecma262_match_engine_capture_exact_plan
+  test_ecma262_match_engine_concatenation_exact_plan
+  test_ecma262_match_engine_character_classes_exact_plan
+  test_ecma262_match_engine_result_exact_plan
+  test_ecma262_match_engine_start_anchor_exact_plan
+  test_ecma262_match_engine_end_anchor_exact_plan
+  test_ecma262_match_engine_assertion_exact_plan
+  test_ecma262_match_engine_quantifier_exact_plan
+  test_ecma262_match_engine_modifier_exact_plan
+  test_ecma262_match_engine_pattern_semantics_exact_plan
+  test_ecma262_match_engine_annex_b_exact_plan
+  test_ecma262_exec_result_matching_exact_plan
+  test_ecma262_exec_result_exec_exact_plan
+  test_ecma262_exec_result_capture_exact_plan
+  test_ecma262_exec_result_indices_exact_plan
+  test_ecma262_exec_result_instances_exact_plan
+  test_ecma262_match_adapter
+  test_ecma262_match_all_adapter
+  test_ecma262_search_adapter
+  test_ecma262_split_adapter
+  test_ecma262_replace_adapter
+  test_ecma262_escape_adapter
+  test_ecma262_spec_model_exact_plan
+  test_test262_regexp_executable_cases
+  test_ecma262_ucd_generated_cases
+  test_ecma262_match_state_exact_plan
+  test_test262_negative_syntax
+  test_ecma262_test_evidence
+  test_ecma262_exactness_audit
+  test_ecma262_requirement_test_worklist
+  test_ecma262_selector_gap_worklist
+  test_ecma262_local_exact_plan
+  test_ecma262_local_exact_compile_parser
+  test_ecma262_reused_candidate_worklist
+  test_ecma262_reused_candidate_exact_plan
+  test_ecma262_reused_candidate_exact_compile_parser
+  test_ecma262_coverage_ledger)
+ (libraries ecma-regex alcotest))
+
+(tests
+ (names
+  test_json_schema_corpus
+  test_json_schema_failure_worklist)
+ (libraries ecma-regex alcotest yojson))

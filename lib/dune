@@ -1,0 +1,4 @@
+(library
+ (name ecma_regex)
+ (public_name ecma-regex)
+ (modules ecma_regex ecma_regex_core ecma_regex_ucd_tables))
