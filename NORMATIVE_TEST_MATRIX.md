@@ -32,6 +32,11 @@ Allowed statuses in this document:
 `covered` is only valid when the evidence is connected to a committed test,
 tool, or generated runtime source path.
 
+Evidence may be connected through either package-safe default tests or explicit
+local evidence runners. Default `dune runtest` is self-contained for opam
+`--with-test`; generated ledger/corpus evidence that requires `cache/` or
+`external/` is run with `dune build @runtest @test/evidence`.
+
 ## Current Ledger Result
 
 The current ECMA-262 RegExp coverage ledger reports:

@@ -13,32 +13,39 @@ The test matrix maps requirement families to evidence. This audit explains the
 evidence layers, their default-vs-explicit role, and the remaining
 quality-hardening work that must not be mistaken for credited conformance.
 
-## Default Test Gate
+## Test Runner Tiers
 
-The default repository test gate is:
+The package-safe default test gate is:
 
 ```text
 opam exec -- dune runtest
 ```
 
-It proves that the committed test suite is green in the active opam switch.
-That suite includes:
+It is intentionally self-contained so opam `--with-test` can run from a clean
+source archive without `cache/` or `external/` working artifacts. That suite
+includes:
 
 - public API smoke and contract tests;
-- ECMA-262 compile/parser exact-plan tests;
-- ECMA-262 matcher exact-plan tests;
-- ECMA-262 exec/result/capture/index tests;
-- RegExp adapter tests for search, match, matchAll, split, replace, replaceAll,
-  and escape;
-- raw UTF-16 ECMAScript String tests;
-- generated UCD 16.0.0 tests;
-- JSON Schema regex-facing corpus tests;
-- test262-derived executable corpus tests and negative syntax tests;
-- coverage ledger and worklist invariant tests.
+- raw UTF-16 escape matrix tests;
+- raw UTF-16 negative-position tests;
+- raw UTF-16 result-slicing tests.
 
-Default `dune runtest` is the main executable health gate. It is not, by
+The full local evidence gate is:
+
+```text
+opam exec -- dune build @runtest @test/evidence
+```
+
+It additionally runs ECMA-262 exact-plan tests, matcher and adapter evidence
+tests, generated UCD 16.0.0 tests, JSON Schema regex-facing corpus tests,
+test262-derived executable corpus tests, and coverage ledger/worklist invariant
+tests. This gate requires prepared `cache/` outputs and downloaded `external/`
+corpora and is therefore not part of opam package `@runtest`.
+
+Default `dune runtest` is the installable package health gate. It is not, by
 itself, the whole conformance argument; the conformance argument also depends
-on the generated ledger and corpus evidence described below.
+on the explicit evidence gate and generated ledger/corpus evidence described
+below.
 
 ## Explicit Evidence Runners
 

@@ -142,6 +142,20 @@ The implementation is tested against:
 Generated corpora and working evidence files are development artifacts, not
 part of the public API.
 
+Default package tests are self-contained and run from a clean opam source
+archive:
+
+```sh
+opam exec -- dune runtest
+```
+
+Full local evidence tests require prepared `cache/` outputs and downloaded
+`external/` corpora:
+
+```sh
+opam exec -- dune build @runtest @test/evidence
+```
+
 Formal conformance documentation:
 
 - [`NORMATIVE_HIERARCHY.md`](NORMATIVE_HIERARCHY.md)
@@ -149,3 +163,7 @@ Formal conformance documentation:
 - [`NORMATIVE_TEST_MATRIX.md`](NORMATIVE_TEST_MATRIX.md)
 - [`TEST_EVIDENCE_AUDIT.md`](TEST_EVIDENCE_AUDIT.md)
 - [`DEVIATION_REGISTER.md`](DEVIATION_REGISTER.md)
+
+Release history:
+
+- [`CHANGES.md`](CHANGES.md)
