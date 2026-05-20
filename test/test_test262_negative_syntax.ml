@@ -15,19 +15,14 @@ let repo_root () =
   in
   climb cwd
 
-let path segments =
-  List.fold_left Filename.concat (repo_root ()) segments
+let path segments = List.fold_left Filename.concat (repo_root ()) segments
 
 let strip_trailing_cr value =
   let length = String.length value in
-  if length > 0 && value.[length - 1] = '\r' then
-    String.sub value 0 (length - 1)
+  if length > 0 && value.[length - 1] = '\r' then String.sub value 0 (length - 1)
   else value
 
-let split_tsv_line line =
-  line
-  |> strip_trailing_cr
-  |> String.split_on_char '\t'
+let split_tsv_line line = line |> strip_trailing_cr |> String.split_on_char '\t'
 
 let pad_to width fields =
   let rec loop fields =
@@ -41,17 +36,17 @@ let read_tsv rel =
   Fun.protect
     ~finally:(fun () -> close_in_noerr ic)
     (fun () ->
-       let header = split_tsv_line (input_line ic) in
-       let width = List.length header in
-       let rec rows acc =
-         match input_line ic with
-         | line ->
-           let fields = split_tsv_line line |> pad_to width in
-           let row = List.combine header fields in
-           rows (row :: acc)
-         | exception End_of_file -> List.rev acc
-       in
-       rows [])
+      let header = split_tsv_line (input_line ic) in
+      let width = List.length header in
+      let rec rows acc =
+        match input_line ic with
+        | line ->
+            let fields = split_tsv_line line |> pad_to width in
+            let row = List.combine header fields in
+            rows (row :: acc)
+        | exception End_of_file -> List.rev acc
+      in
+      rows [])
 
 let field name row =
   match List.assoc_opt name row with
@@ -68,16 +63,15 @@ let count_by field_name rows =
   let counts = Hashtbl.create 16 in
   List.iter
     (fun row ->
-       let key = field field_name row in
-       let count = Option.value (Hashtbl.find_opt counts key) ~default:0 in
-       Hashtbl.replace counts key (count + 1))
+      let key = field field_name row in
+      let count = Option.value (Hashtbl.find_opt counts key) ~default:0 in
+      Hashtbl.replace counts key (count + 1))
     rows;
   counts
 
 let check_count counts key expected =
   Alcotest.(check int)
-    key
-    expected
+    key expected
     (Option.value (Hashtbl.find_opt counts key) ~default:0)
 
 let test_negative_manifest () =
@@ -94,16 +88,14 @@ let test_negative_manifest () =
   check_count kind_counts "regexp_function_string" 131;
   List.iter
     (fun row ->
-       Alcotest.(check string)
-         "expected behavior"
-         "compile_error"
-         (field "expected_behavior" row);
-       if field "pattern" row = "" && field "flags" row = "" then
-         Alcotest.failf "%s:%s: empty negative case"
-           (field "source_path" row)
-           (field "line" row);
-       if not (source_exists (field "source_path" row)) then
-         Alcotest.failf "%s: missing test262 source" (field "source_path" row))
+      Alcotest.(check string)
+        "expected behavior" "compile_error"
+        (field "expected_behavior" row);
+      if field "pattern" row = "" && field "flags" row = "" then
+        Alcotest.failf "%s:%s: empty negative case" (field "source_path" row)
+          (field "line" row);
+      if not (source_exists (field "source_path" row)) then
+        Alcotest.failf "%s: missing test262 source" (field "source_path" row))
     rows
 
 let check_negative_case index total row =
@@ -119,16 +111,12 @@ let check_negative_case index total row =
   match result with
   | Error _ -> ()
   | Ok _ ->
-    Alcotest.failf
-      "test262 negative syntax case unexpectedly compiled (%d/%d): %s:%s \
-       kind=%s extractor=%s raw=%S pattern=%S flags=%S"
-      (index + 1) total
-      (field "source_path" row)
-      (field "line" row)
-      (field "source_kind" row)
-      (field "extractor" row)
-      (field "raw" row)
-      pattern flags_source
+      Alcotest.failf
+        "test262 negative syntax case unexpectedly compiled (%d/%d): %s:%s \
+         kind=%s extractor=%s raw=%S pattern=%S flags=%S"
+        (index + 1) total (field "source_path" row) (field "line" row)
+        (field "source_kind" row) (field "extractor" row) (field "raw" row)
+        pattern flags_source
 
 let test_negative_cases_reject () =
   let rows = negative_rows () in
@@ -137,13 +125,16 @@ let test_negative_cases_reject () =
     rows
 
 let () =
-  Alcotest.run "test262-negative-syntax" [
-    ("manifest", [
-      Alcotest.test_case "generated negative syntax manifest" `Quick
-        test_negative_manifest;
-    ]);
-    ("compile", [
-      Alcotest.test_case "negative syntax cases reject" `Quick
-        test_negative_cases_reject;
-    ]);
-  ]
+  Alcotest.run "test262-negative-syntax"
+    [
+      ( "manifest",
+        [
+          Alcotest.test_case "generated negative syntax manifest" `Quick
+            test_negative_manifest;
+        ] );
+      ( "compile",
+        [
+          Alcotest.test_case "negative syntax cases reject" `Quick
+            test_negative_cases_reject;
+        ] );
+    ]

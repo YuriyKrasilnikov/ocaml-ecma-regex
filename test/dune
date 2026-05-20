@@ -61,9 +61,7 @@
  (libraries ecma-regex alcotest))
 
 (executables
- (names
-  test_json_schema_corpus
-  test_json_schema_failure_worklist)
+ (names test_json_schema_corpus test_json_schema_failure_worklist)
  (libraries ecma-regex alcotest yojson))
 
 (rule
@@ -80,7 +78,8 @@
    (run ./test_ecma262_match_engine_exact_plan.exe)
    (run ./test_ecma262_match_engine_atoms_exact_plan.exe)
    (run ./test_ecma262_match_engine_unicode_sets_string_exact_plan.exe)
-   (run ./test_ecma262_match_engine_unicode_sets_escape_string_exact_plan.exe)
+   (run
+    ./test_ecma262_match_engine_unicode_sets_escape_string_exact_plan.exe)
    (run ./test_ecma262_match_engine_backreference_exact_plan.exe)
    (run ./test_ecma262_match_engine_backreference_matcher_exact_plan.exe)
    (run ./test_ecma262_match_engine_capture_exact_plan.exe)

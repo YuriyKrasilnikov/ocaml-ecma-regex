@@ -15,19 +15,14 @@ let repo_root () =
   in
   climb cwd
 
-let path segments =
-  List.fold_left Filename.concat (repo_root ()) segments
+let path segments = List.fold_left Filename.concat (repo_root ()) segments
 
 let strip_trailing_cr value =
   let length = String.length value in
-  if length > 0 && value.[length - 1] = '\r' then
-    String.sub value 0 (length - 1)
+  if length > 0 && value.[length - 1] = '\r' then String.sub value 0 (length - 1)
   else value
 
-let split_tsv_line line =
-  line
-  |> strip_trailing_cr
-  |> String.split_on_char '\t'
+let split_tsv_line line = line |> strip_trailing_cr |> String.split_on_char '\t'
 
 let pad_to width fields =
   let rec loop fields =
@@ -41,17 +36,17 @@ let read_tsv rel =
   Fun.protect
     ~finally:(fun () -> close_in_noerr ic)
     (fun () ->
-       let header = split_tsv_line (input_line ic) in
-       let width = List.length header in
-       let rec rows acc =
-         match input_line ic with
-         | line ->
-           let fields = split_tsv_line line |> pad_to width in
-           let row = List.combine header fields in
-           rows (row :: acc)
-         | exception End_of_file -> List.rev acc
-       in
-       rows [])
+      let header = split_tsv_line (input_line ic) in
+      let width = List.length header in
+      let rec rows acc =
+        match input_line ic with
+        | line ->
+            let fields = split_tsv_line line |> pad_to width in
+            let row = List.combine header fields in
+            rows (row :: acc)
+        | exception End_of_file -> List.rev acc
+      in
+      rows [])
 
 let field name row =
   match List.assoc_opt name row with
@@ -65,22 +60,21 @@ let count_by field_name rows =
   let counts = Hashtbl.create 16 in
   List.iter
     (fun row ->
-       let key = field field_name row in
-       let count = Option.value (Hashtbl.find_opt counts key) ~default:0 in
-       Hashtbl.replace counts key (count + 1))
+      let key = field field_name row in
+      let count = Option.value (Hashtbl.find_opt counts key) ~default:0 in
+      Hashtbl.replace counts key (count + 1))
     rows;
   counts
 
 let check_count counts key expected =
   Alcotest.(check int)
-    key
-    expected
+    key expected
     (Option.value (Hashtbl.find_opt counts key) ~default:0)
 
 let source_exists case_source =
   match String.split_on_char ':' case_source with
   | source_path :: _ ->
-    Sys.file_exists (path [ "external"; "test262"; source_path ])
+      Sys.file_exists (path [ "external"; "test262"; source_path ])
   | [] -> false
 
 let test_selector_gap_manifest () =
@@ -104,28 +98,28 @@ let test_selector_gap_manifest () =
   check_count family_counts "parser_unicode_sets_semantic_operation" 0;
   List.iter
     (fun row ->
-       Alcotest.(check string)
-         "exact candidate count"
-         "0"
-         (field "exact_candidate_count" row);
-       Alcotest.(check string) "best case id" "" (field "best_case_id" row);
-       Alcotest.(check string)
-         "next action"
-         "add_local_exact_compile_or_parser_test"
-         (field "next_action" row);
-       if field "missing_selector_tags" row = "" then
-         Alcotest.failf "%s: missing_selector_tags is empty"
-           (field "worklist_id" row);
-       if not (source_exists (field "current_case_source" row)) then
-         Alcotest.failf "%s: missing current test262 source %s"
-           (field "worklist_id" row)
-           (field "current_case_source" row))
+      Alcotest.(check string)
+        "exact candidate count" "0"
+        (field "exact_candidate_count" row);
+      Alcotest.(check string) "best case id" "" (field "best_case_id" row);
+      Alcotest.(check string)
+        "next action" "add_local_exact_compile_or_parser_test"
+        (field "next_action" row);
+      if field "missing_selector_tags" row = "" then
+        Alcotest.failf "%s: missing_selector_tags is empty"
+          (field "worklist_id" row);
+      if not (source_exists (field "current_case_source" row)) then
+        Alcotest.failf "%s: missing current test262 source %s"
+          (field "worklist_id" row)
+          (field "current_case_source" row))
     rows
 
 let () =
-  Alcotest.run "ecma262-selector-gap-worklist" [
-    ("manifest", [
-      Alcotest.test_case "selector gap worklist invariants" `Quick
-        test_selector_gap_manifest;
-    ]);
-  ]
+  Alcotest.run "ecma262-selector-gap-worklist"
+    [
+      ( "manifest",
+        [
+          Alcotest.test_case "selector gap worklist invariants" `Quick
+            test_selector_gap_manifest;
+        ] );
+    ]
